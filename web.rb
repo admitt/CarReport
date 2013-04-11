@@ -3,11 +3,16 @@ require 'sinatra'
 
 require File.expand_path(File.dirname(__FILE__) + '/cars.rb')
 
-queries = %w(/brand/:brand /model/:model /make/:make /power_kw/:power_kw)
-paths = []
-(1..queries.size).each { |i| paths << queries.combination(i).map {|item| item.join} } #TODO permutation for each item
-paths.flatten!
-
-paths.each do |path|
-  get(path) { car_count(params).to_s }
+get('/car_count/*') do
+  criteria = to_params(params[:splat].to_s)
+  return 404 unless valid?(criteria)
+  car_count(criteria).to_s
 end
+
+private
+
+  def to_params(criteria)
+    pairs = criteria.split('/')
+    pairs.pop if pairs.size.odd?
+    Hash[*pairs]
+  end

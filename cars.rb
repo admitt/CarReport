@@ -1,6 +1,7 @@
 #Kategooria;Mark;Mudel;Keretyyp;Väljalaske aasta;Mootori tüüp;Mootori võimsus;Maakond;Arv
 
 Entry = Struct.new(:category, :brand, :model, :body_type, :make, :motor_type, :power_kw, :county, :count)
+private
 ALL_ENTRIES = []
 
 File.open('car_report.csv', 'r').each_line do |line|
@@ -12,9 +13,9 @@ def query(params)
 end
 
 def car_count(search_criteria)
-  query(filter_keys(search_criteria)).inject(0) { |sum, entry| sum + entry.count.to_i }
+  query(search_criteria).inject(0) { |sum, entry| sum + entry.count.to_i }
 end
 
-def filter_keys(search_criteria)
-  search_criteria.select { |key, value| Entry.members.include?(key) }
+def valid?(search_criteria)
+  (search_criteria.keys - Entry.members).empty?
 end
