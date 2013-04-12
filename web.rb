@@ -1,5 +1,6 @@
 require 'rubygems'
 require 'sinatra'
+require 'json'
 
 require File.expand_path(File.dirname(__FILE__) + '/cars.rb')
 
@@ -8,7 +9,8 @@ get('/car_count/*') do
 end
 
 get('/cars/*') do
-  validate_params_and_execute(Proc.new {|criteria| query(criteria).map {|car| car.values.join(' ')}.join("\n")})
+  content_type :json
+  {'cars' => validate_params_and_execute(Proc.new {|criteria| query(criteria).map {|car| car.to_hash}})}.to_json
 end
 
 private

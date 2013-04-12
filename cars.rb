@@ -1,11 +1,19 @@
 #Kategooria;Mark;Mudel;Keretyyp;Väljalaske aasta;Mootori tüüp;Mootori võimsus;Maakond;Arv
 
-Entry = Struct.new(:category, :brand, :model, :body_type, :make, :motor_type, :power_kw, :county, :count)
+Entry = Struct.new(:category, :brand, :model, :body_type, :make, :motor_type, :power_kw, :county, :count) do
+  def to_hash
+    members.inject(Hash.new) do |output, member|
+      output.store(member, self[member])
+      output
+    end
+  end
+end
+
 private
 ALL_ENTRIES = []
 
 File.open('car_report.csv', 'r').each_line do |line|
-  ALL_ENTRIES << Entry.new(*line.split(';'))
+  ALL_ENTRIES << Entry.new(*line.gsub(/\n/, '').split(';'))
 end
 
 def query(params)
