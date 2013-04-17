@@ -44,6 +44,10 @@ def valid?(search_criteria)
   (search_criteria.keys - Entry.members).empty?
 end
 
+def valid_property?(property)
+  Entry.members.include?(property)
+end
+
 def sum_counts(entries)
   entries.inject(0) { |sum, entry| sum + entry.count.to_i }
 end

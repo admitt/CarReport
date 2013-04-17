@@ -15,7 +15,9 @@ end
 
 get('/car_counts/by_property/:property') do
   content_type :json
-  counts_by(params[:property]).to_json
+  property = params[:property]
+  return 404 unless valid_property?(property)
+  counts_by(property).to_json
 end
 
 private
