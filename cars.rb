@@ -32,7 +32,8 @@ def query(params)
 end
 
 def counts_by(property)
-  DATA_SOURCE.group_by(property).map {|key, entries| {key => sum_counts(entries)}}
+  key_to_count = DATA_SOURCE.group_by(property).map {|key, entries| [key, sum_counts(entries)]}
+  Hash[key_to_count].sort
 end
 
 def car_count(search_criteria)
