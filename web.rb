@@ -15,13 +15,13 @@ end
 
 private
 def validate_params_and_execute(callback)
-  criteria = to_params(params[:splat].to_s)
+  criteria = to_criteria(params[:splat].to_s)
   return 404 unless valid?(criteria)
   callback.call(criteria)
 end
 
-def to_params(criteria)
-  pairs = criteria.split('/')
+def to_criteria(splat)
+  pairs = splat.split('/')
   pairs.pop if pairs.size.odd?
   Hash[*pairs]
 end
