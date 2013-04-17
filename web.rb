@@ -5,12 +5,12 @@ require 'json'
 require File.expand_path(File.dirname(__FILE__) + '/cars.rb')
 
 get('/car_count/*') do
-  validate_params_and_execute(Proc.new {|criteria| car_count(criteria).to_s})
+  validate_params_and_execute(Proc.new { |criteria| car_count(criteria).to_s })
 end
 
 get('/cars/*') do
   content_type :json
-  {'cars' => validate_params_and_execute(Proc.new {|criteria| query(criteria).map {|car| car.to_hash}})}.to_json
+  {:cars => validate_params_and_execute(Proc.new { |criteria| query(criteria).map { |car| car.to_hash } })}.to_json
 end
 
 private
