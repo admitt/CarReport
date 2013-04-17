@@ -10,7 +10,7 @@ end
 
 get('/cars/*') do
   content_type :json
-  {:cars => validate_params_and_execute(Proc.new { |criteria| query(criteria).map { |car| car.to_hash } })}.to_json
+  validate_params_and_execute(Proc.new { |criteria| {:cars => query(criteria).map { |car| car.to_hash } }.to_json})
 end
 
 private
