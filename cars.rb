@@ -9,15 +9,22 @@ Entry = Struct.new(:category, :brand, :model, :body_type, :make, :motor_type, :p
   end
 end
 
-private
-ALL_ENTRIES = []
+class CsvDataSource
+  def initialize(io)
+    @all_entries = []
+    io.each_line do |line|
+      @all_entries << Entry.new(*line.gsub(/\n/, '').split(';'))
+    end
+  end
 
-File.open('car_report.csv', 'r').each_line do |line|
-  ALL_ENTRIES << Entry.new(*line.gsub(/\n/, '').split(';'))
+  def filter(&predicate)
+    @all_entries.select &predicate
+  end
 end
 
+DATA_SOURCE = CsvDataSource.new(File.open('car_report.csv', 'r'))
 def query(params)
-  ALL_ENTRIES.select { |entry| params.inject(true) { |valid, param| valid and (param[1].casecmp(entry[param[0]]) == 0)} }
+  DATA_SOURCE.filter { |entry| params.inject(true) { |valid, param| valid and (param[1].casecmp(entry[param[0]]) == 0) } }
 end
 
 def car_count(search_criteria)
