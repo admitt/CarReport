@@ -32,13 +32,17 @@ def query(params)
 end
 
 def counts_by(property)
-  DATA_SOURCE.group_by(property).map {|k, v| {k => v.size()}}
+  DATA_SOURCE.group_by(property).map {|key, entries| {key => sum_counts(entries)}}
 end
 
 def car_count(search_criteria)
-  query(search_criteria).inject(0) { |sum, entry| sum + entry.count.to_i }
+  sum_counts(query(search_criteria))
 end
 
 def valid?(search_criteria)
   (search_criteria.keys - Entry.members).empty?
+end
+
+def sum_counts(entries)
+  entries.inject(0) { |sum, entry| sum + entry.count.to_i }
 end
