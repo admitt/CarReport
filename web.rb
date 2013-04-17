@@ -13,6 +13,11 @@ get('/cars/*') do
   validate_params_and_execute(Proc.new { |criteria| {:cars => query(criteria).map { |car| car.to_hash } }.to_json})
 end
 
+get('/car_counts/by_property/:property') do
+  content_type :json
+  counts_by(params[:property]).to_json
+end
+
 private
 def validate_params_and_execute(callback)
   criteria = to_criteria(params[:splat].to_s)

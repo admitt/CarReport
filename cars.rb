@@ -20,11 +20,19 @@ class CsvDataSource
   def filter(&predicate)
     @all_entries.select &predicate
   end
+
+  def group_by(property)
+    @all_entries.group_by { |entry| entry[property]}
+  end
 end
 
 DATA_SOURCE = CsvDataSource.new(File.open('car_report.csv', 'r'))
 def query(params)
   DATA_SOURCE.filter { |entry| params.inject(true) { |valid, param| valid and (param[1].casecmp(entry[param[0]]) == 0) } }
+end
+
+def counts_by(property)
+  DATA_SOURCE.group_by(property).map {|k, v| {k => v.size()}}
 end
 
 def car_count(search_criteria)
